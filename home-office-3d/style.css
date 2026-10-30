@@ -1,0 +1,37 @@
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; overflow: hidden; background: #111; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+canvas { display: block; }
+
+#overlay {
+  position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
+  background: rgba(15, 18, 22, 0.55); backdrop-filter: blur(3px); cursor: pointer; z-index: 10;
+}
+#overlay.hidden { display: none; }
+.panel {
+  background: rgba(255, 255, 255, 0.95); color: #222; padding: 28px 32px; border-radius: 14px;
+  max-width: 420px; width: calc(100% - 32px); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+}
+.panel h1 { margin: 0 0 4px; font-size: 22px; }
+.panel .sub { margin: 0 0 18px; color: #666; font-size: 14px; }
+.keys { list-style: none; padding: 0; margin: 0 0 20px; font-size: 14px; }
+.keys li { display: flex; align-items: center; gap: 4px; padding: 5px 0; border-bottom: 1px solid #eee; }
+.keys li span { margin-left: auto; color: #555; }
+kbd {
+  display: inline-block; min-width: 24px; padding: 2px 6px; text-align: center; font: 12px/18px ui-monospace, monospace;
+  background: #f4f4f4; border: 1px solid #ccc; border-bottom-width: 2px; border-radius: 4px;
+}
+#start {
+  width: 100%; padding: 12px; font-size: 15px; font-weight: 600; color: #fff; background: #2f6f5e;
+  border: 0; border-radius: 8px; cursor: pointer;
+}
+#start:hover { background: #255a4c; }
+
+#hud { position: fixed; left: 0; right: 0; bottom: 16px; display: flex; justify-content: center; align-items: center; gap: 12px; pointer-events: none; z-index: 5; padding: 0 16px; }
+#hint { background: rgba(0, 0, 0, 0.5); color: #fff; font-size: 13px; padding: 7px 12px; border-radius: 6px; }
+#reset {
+  pointer-events: auto; padding: 8px 14px; font-size: 13px; font-weight: 600; border: 0; border-radius: 6px;
+  background: rgba(255, 255, 255, 0.92); color: #222; cursor: pointer;
+}
+#reset:hover { background: #fff; }
+
+#crosshair { position: fixed; left: 50%; top: 50%; width: 6px; height: 6px; margin: -3px 0 0 -3px; border-radius: 50%; background: rgba(255, 255, 255, 0.8); box-shadow: 0 0 2px rgba(0,0,0,0.6); pointer-events: none; z-index: 4; }

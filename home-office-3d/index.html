@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>3D Home Office</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="overlay">
+    <div class="panel">
+      <h1>Home Office Walkthrough</h1>
+      <p class="sub">15 ft × 12 ft room · click anywhere to start</p>
+      <ul class="keys">
+        <li><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> or arrow keys <span>move</span></li>
+        <li><kbd>Mouse</kbd> <span>look around</span></li>
+        <li><kbd>Shift</kbd> <span>walk faster</span></li>
+        <li><kbd>L</kbd> <span>toggle floor lamp</span></li>
+        <li><kbd>R</kbd> <span>reset position</span></li>
+        <li><kbd>Esc</kbd> <span>release mouse / pause</span></li>
+      </ul>
+      <button id="start" type="button">Click to explore</button>
+    </div>
+  </div>
+
+  <div id="hud">
+    <div id="hint">WASD move · Mouse look · Shift faster · L lamp · R reset · Esc pause</div>
+    <button id="reset" type="button" title="Return to starting position (R)">Reset view</button>
+  </div>
+  <div id="crosshair"></div>
+
+  <script src="vendor/three.min.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
