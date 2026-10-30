@@ -29,10 +29,12 @@ Either:
 | Mouse | Look around |
 | Shift | Walk faster |
 | L | Toggle the floor lamp |
+| M | Show / hide the minimap |
 | R or **Reset view** button | Return to the starting position |
 | Esc | Release the mouse (shows the instructions again) |
 
-You can't walk through walls or furniture.
+You can't walk through walls or furniture. A minimap in the top-right corner shows the room
+from above (window at the top, door on the right) with your position and viewing direction.
 
 ## Files
 

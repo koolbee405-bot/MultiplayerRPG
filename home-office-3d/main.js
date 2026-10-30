@@ -232,11 +232,11 @@
   }
 
   // Register a collider from a group's world-space bounding box (with optional padding).
-  function addCollider(obj, pad) {
+  function addCollider(obj, pad, kind) {
     obj.updateMatrixWorld(true);
     const b = new THREE.Box3().setFromObject(obj);
     pad = pad || 0;
-    colliders.push({ minX: b.min.x - pad, maxX: b.max.x + pad, minZ: b.min.z - pad, maxZ: b.max.z + pad });
+    colliders.push({ minX: b.min.x - pad, maxX: b.max.x + pad, minZ: b.min.z - pad, maxZ: b.max.z + pad, kind });
   }
 
   // ---------- room shell ----------
@@ -348,7 +348,7 @@
   box(desk, 0.21, 0.015, 0.28, M.terracotta, -0.4, DESK.h, -0.12).rotation.y = 0.2;
   desk.position.set(WIN.cx, 0, -HZ + DESK.d / 2 + 0.05);
   scene.add(desk);
-  addCollider(desk, 0.02);
+  addCollider(desk, 0.02, 'desk');
 
   // PC tower under the right side of the desk
   const tower = new THREE.Group();
@@ -381,7 +381,7 @@
   chair.position.set(WIN.cx + 0.05, 0, -HZ + 0.95);
   chair.rotation.y = -0.25;
   scene.add(chair);
-  colliders.push({ minX: chair.position.x - 0.3, maxX: chair.position.x + 0.3, minZ: chair.position.z - 0.3, maxZ: chair.position.z + 0.3 });
+  colliders.push({ minX: chair.position.x - 0.3, maxX: chair.position.x + 0.3, minZ: chair.position.z - 0.3, maxZ: chair.position.z + 0.3, kind: 'chair' });
 
   // ---------- bookshelves (west wall) ----------
   function bookshelf(z) {
@@ -411,7 +411,7 @@
     g.rotation.y = Math.PI / 2;
     g.position.set(-HX + D / 2 + 0.01, 0, z);
     scene.add(g);
-    addCollider(g, 0.02);
+    addCollider(g, 0.02, 'shelf');
     return g;
   }
   bookshelf(-0.75);
@@ -436,7 +436,7 @@
   pillow.rotation.set(-0.25, 0.25, 0.08);
   couch.position.set(0.2, 0, HZ - C.d / 2 - 0.05);
   scene.add(couch);
-  addCollider(couch, 0.02);
+  addCollider(couch, 0.02, 'couch');
 
   // Coffee table + rug
   const rug = new THREE.Mesh(new THREE.PlaneGeometry(2.2, 1.5), M.rug);
@@ -454,7 +454,7 @@
   box(table, 0.2, 0.025, 0.15, bookMats[3], -0.07, 0.46, 0.01).rotation.y = 0.1;
   table.position.set(0.2, 0, 0.55);
   scene.add(table);
-  colliders.push({ minX: 0.2 - 0.38, maxX: 0.2 + 0.38, minZ: 0.55 - 0.24, maxZ: 0.55 + 0.24 });
+  colliders.push({ minX: 0.2 - 0.38, maxX: 0.2 + 0.38, minZ: 0.55 - 0.24, maxZ: 0.55 + 0.24, kind: 'table' });
 
   // ---------- floor lamp (left of couch) ----------
   const lamp = new THREE.Group();
@@ -476,7 +476,7 @@
   lamp.add(lampLight);
   lamp.position.set(-1.15, 0, HZ - 0.35);
   scene.add(lamp);
-  colliders.push({ minX: -1.15 - 0.18, maxX: -1.15 + 0.18, minZ: HZ - 0.53, maxZ: HZ - 0.17 });
+  colliders.push({ minX: -1.15 - 0.18, maxX: -1.15 + 0.18, minZ: HZ - 0.53, maxZ: HZ - 0.17, kind: 'lamp' });
   let lampOn = true;
 
   // ---------- plants ----------
@@ -514,11 +514,11 @@
   }
 
   const p1 = plant(scene, -HX + 0.35, -HZ + 0.35, { potR: 0.18, potH: 0.4, height: 1.1, leaves: 26, leafScale: 1.6 });          // NW corner
-  addCollider(p1.children[0], 0.04);
+  addCollider(p1.children[0], 0.04, 'plant');
   const p2 = plant(scene, HX - 0.35, -HZ + 0.35, { potR: 0.15, potH: 0.35, height: 0.8, leaves: 20, leafScale: 1.3, potMat: M.terracotta }); // NE corner
-  addCollider(p2.children[0], 0.04);
+  addCollider(p2.children[0], 0.04, 'plant');
   const p3 = plant(scene, 1.6, HZ - 0.3, { potR: 0.14, potH: 0.5, height: 0.6, leaves: 18, leafScale: 1.2 });                  // beside couch
-  addCollider(p3.children[0], 0.04);
+  addCollider(p3.children[0], 0.04, 'plant');
   plant(desk, 0.6, -0.2, { potR: 0.055, potH: 0.1, height: 0.15, leaves: 10, leafScale: 0.45, potMat: M.terracotta, y: DESK.h }); // on desk
   plant(table, 0.15, 0, { potR: 0.05, potH: 0.08, height: 0.12, leaves: 8, leafScale: 0.4, y: 0.43 });                           // coffee table
   plant(scene, -HX + 0.18, -0.75, { potR: 0.06, potH: 0.1, height: 0.25, leaves: 12, leafScale: 0.5, potMat: M.terracotta, y: 1.9 }); // bookshelf top
@@ -573,6 +573,7 @@
   window.addEventListener('keydown', (e) => {
     keys[e.code] = true;
     if (e.code === 'KeyR') resetView();
+    if (e.code === 'KeyM' && !e.repeat) toggleMinimap();
     if (e.code === 'KeyL' && !e.repeat) {
       lampOn = !lampOn;
       lampLight.visible = lampOn;
@@ -622,11 +623,77 @@
     renderer.setSize(window.innerWidth, window.innerHeight);
   });
 
+  // ---------- minimap ----------
+  // Top-down plan: window (north) at the top, x to the right. Drawn every frame on a 2D canvas.
+  const minimap = document.getElementById('minimap');
+  const mctx = minimap.getContext('2d');
+  const MM_W = 220, MM_PAD = 10;
+  const MM_SCALE = (MM_W - MM_PAD * 2) / ROOM_W;
+  const MM_H = Math.round(ROOM_D * MM_SCALE + MM_PAD * 2);
+  const mmDpr = Math.min(window.devicePixelRatio || 1, 2);
+  minimap.width = MM_W * mmDpr;
+  minimap.height = MM_H * mmDpr;
+  minimap.style.width = MM_W + 'px';
+  minimap.style.height = MM_H + 'px';
+  const MM_COLORS = {
+    desk: '#d9b98c', chair: '#3a3c40', shelf: '#8a6446', couch: '#7d8a96',
+    table: '#cfae80', lamp: '#f2d48a', plant: '#5e9a4b',
+  };
+  const mmX = x => MM_PAD + (x + HX) * MM_SCALE;
+  const mmZ = z => MM_PAD + (z + HZ) * MM_SCALE;
+
+  function drawMinimap() {
+    const g = mctx;
+    g.setTransform(mmDpr, 0, 0, mmDpr, 0, 0);
+    g.clearRect(0, 0, MM_W, MM_H);
+    // Floor and rug
+    g.fillStyle = '#ead9bf';
+    g.fillRect(mmX(-HX), mmZ(-HZ), ROOM_W * MM_SCALE, ROOM_D * MM_SCALE);
+    g.fillStyle = '#f4efe6';
+    g.fillRect(mmX(0.2 - 1.1), mmZ(0.65 - 0.75), 2.2 * MM_SCALE, 1.5 * MM_SCALE);
+    // Furniture
+    for (const c of colliders) {
+      g.fillStyle = MM_COLORS[c.kind] || '#999';
+      g.fillRect(mmX(c.minX), mmZ(c.minZ), (c.maxX - c.minX) * MM_SCALE, (c.maxZ - c.minZ) * MM_SCALE);
+    }
+    // Walls
+    g.strokeStyle = '#ffffff';
+    g.lineWidth = 3;
+    g.strokeRect(mmX(-HX), mmZ(-HZ), ROOM_W * MM_SCALE, ROOM_D * MM_SCALE);
+    // Window (north wall) and door (east wall)
+    g.strokeStyle = '#7fc4ff';
+    g.lineWidth = 4;
+    g.beginPath(); g.moveTo(mmX(winL), mmZ(-HZ)); g.lineTo(mmX(winR), mmZ(-HZ)); g.stroke();
+    g.strokeStyle = '#b08a5a';
+    g.beginPath(); g.moveTo(mmX(HX), mmZ(0.75 - 0.43)); g.lineTo(mmX(HX), mmZ(0.75 + 0.43)); g.stroke();
+    // Player: view cone + dot. Forward on the floor plane is (-sin yaw, -cos yaw).
+    const px = mmX(player.x), pz = mmZ(player.z);
+    const fwd = Math.atan2(-Math.cos(player.yaw), -Math.sin(player.yaw));
+    const half = Math.atan(Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2) * camera.aspect);
+    const reach = 1.4 * MM_SCALE;
+    const cone = g.createRadialGradient(px, pz, 0, px, pz, reach);
+    cone.addColorStop(0, 'rgba(255, 90, 60, 0.55)');
+    cone.addColorStop(1, 'rgba(255, 90, 60, 0)');
+    g.fillStyle = cone;
+    g.beginPath(); g.moveTo(px, pz); g.arc(px, pz, reach, fwd - Math.min(half, 1.2), fwd + Math.min(half, 1.2)); g.closePath(); g.fill();
+    g.fillStyle = '#ff5a3c';
+    g.strokeStyle = '#ffffff';
+    g.lineWidth = 2;
+    g.beginPath(); g.arc(px, pz, 5, 0, Math.PI * 2); g.fill(); g.stroke();
+  }
+
+  let minimapOn = true;
+  function toggleMinimap() {
+    minimapOn = !minimapOn;
+    minimap.style.display = minimapOn ? 'block' : 'none';
+  }
+
   // Exposed for automated checks / debugging in the console.
   window.homeOffice = { player, resetView, scene, camera };
 
   renderer.setAnimationLoop(() => {
     update(Math.min(clock.getDelta(), 0.1));
     renderer.render(scene, camera);
+    if (minimapOn) drawMinimap();
   });
 })();

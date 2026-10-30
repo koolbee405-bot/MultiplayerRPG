@@ -16,6 +16,7 @@
         <li><kbd>Mouse</kbd> <span>look around</span></li>
         <li><kbd>Shift</kbd> <span>walk faster</span></li>
         <li><kbd>L</kbd> <span>toggle floor lamp</span></li>
+        <li><kbd>M</kbd> <span>show / hide minimap</span></li>
         <li><kbd>R</kbd> <span>reset position</span></li>
         <li><kbd>Esc</kbd> <span>release mouse / pause</span></li>
       </ul>
@@ -24,10 +25,11 @@
   </div>
 
   <div id="hud">
-    <div id="hint">WASD move · Mouse look · Shift faster · L lamp · R reset · Esc pause</div>
+    <div id="hint">WASD move · Mouse look · Shift faster · L lamp · M map · R reset · Esc pause</div>
     <button id="reset" type="button" title="Return to starting position (R)">Reset view</button>
   </div>
   <div id="crosshair"></div>
+  <canvas id="minimap" title="Room plan — window at the top"></canvas>
 
   <script src="vendor/three.min.js"></script>
   <script src="main.js"></script>
